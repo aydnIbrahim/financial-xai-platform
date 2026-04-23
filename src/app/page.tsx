@@ -2,6 +2,7 @@
 
 import { useAuthStore } from '@/store/useAuthStore';
 import { UserRole } from '@/types';
+import Link from 'next/link';
 import { CustomerDashboard } from '@/features/dashboard/components/CustomerDashboard';
 import { SpecialistDashboard } from '@/features/dashboard/components/SpecialistDashboard';
 import { AnalystDashboard } from '@/features/dashboard/components/AnalystDashboard';
@@ -24,12 +25,22 @@ export default function Home() {
             {user.role === 'ANALYST' && <AnalystDashboard />}
           </div>
 
-          <button 
-            onClick={logout}
-            className="px-6 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
-          >
-            Çıkış Yap
-          </button>
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            {(user.role === 'SPECIALIST' || user.role === 'ANALYST') && (
+              <Link 
+                href="/audit"
+                className="px-6 py-2 bg-gray-800 text-white rounded hover:bg-gray-900 transition font-medium"
+              >
+                Denetim Kayıtları (Audit Logs)
+              </Link>
+            )}
+            <button 
+              onClick={logout}
+              className="px-6 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition font-medium"
+            >
+              Çıkış Yap
+            </button>
+          </div>
         </div>
       </main>
     );

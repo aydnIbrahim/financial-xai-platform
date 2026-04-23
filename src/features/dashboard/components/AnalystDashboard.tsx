@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, ScatterChart, Scatter, CartesianGrid, ZAxis } from 'recharts';
+import { FeedbackWidget } from '@/features/feedback/components/FeedbackWidget';
 
 type ShapData = {
   features: Array<{ name: string; value: number; impact: 'positive' | 'negative' }>;
@@ -77,6 +78,7 @@ export function AnalystDashboard() {
           </div>
         </div>
       </div>
+      <FeedbackWidget />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { FeedbackWidget } from '@/features/feedback/components/FeedbackWidget';
 
 type DecisionData = {
   decision: 'APPROVED' | 'REJECTED';
@@ -47,6 +48,8 @@ export function CustomerDashboard() {
           {data.message}
         </p>
       </div>
+
+      <FeedbackWidget />
     </div>
   );
 }

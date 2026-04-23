@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { WhatIfModule } from '@/features/what-if/components/WhatIfModule';
+import { FeedbackWidget } from '@/features/feedback/components/FeedbackWidget';
 
 type DecisionData = {
   decision: 'APPROVED' | 'REJECTED';
@@ -71,6 +72,7 @@ export function SpecialistDashboard() {
       </div>
 
       <WhatIfModule />
+      <FeedbackWidget />
     </div>
   );
 }
