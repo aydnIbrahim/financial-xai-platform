@@ -2,6 +2,9 @@
 
 import { useAuthStore } from '@/store/useAuthStore';
 import { UserRole } from '@/types';
+import { CustomerDashboard } from '@/features/dashboard/components/CustomerDashboard';
+import { SpecialistDashboard } from '@/features/dashboard/components/SpecialistDashboard';
+import { AnalystDashboard } from '@/features/dashboard/components/AnalystDashboard';
 
 export default function Home() {
   const { user, login, logout } = useAuthStore();
@@ -15,13 +18,10 @@ export default function Home() {
             Aktif Rol: <span className="font-semibold text-blue-600">{user.role}</span>
           </p>
           
-          <div className="p-4 bg-gray-100 rounded-lg mb-8">
-            {/* BURAYA ROL TABANLI DASHBOARD BİLEŞENLERİ GELECEK */}
-            <p className="text-sm text-gray-500 italic">
-              {user.role === 'CUSTOMER' && "Sadece onay/ret ve basit metin gösterilecek."}
-              {user.role === 'SPECIALIST' && "LIME grafikleri ve What-If senaryoları yüklenecek."}
-              {user.role === 'ANALYST' && "Tam SHAP matrisi ve model bağımlılıkları yüklenecek."}
-            </p>
+          <div className="mb-8 text-left">
+            {user.role === 'CUSTOMER' && <CustomerDashboard />}
+            {user.role === 'SPECIALIST' && <SpecialistDashboard />}
+            {user.role === 'ANALYST' && <AnalystDashboard />}
           </div>
 
           <button 
