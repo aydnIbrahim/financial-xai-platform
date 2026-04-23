@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { WhatIfModule } from '@/features/what-if/components/WhatIfModule';
 
 type DecisionData = {
   decision: 'APPROVED' | 'REJECTED';
@@ -69,10 +70,7 @@ export function SpecialistDashboard() {
         </div>
       </div>
 
-      {/* Placeholder for What-If Module */}
-      <div className="bg-indigo-50 p-6 rounded-xl border border-indigo-100 border-dashed">
-        <p className="text-center text-indigo-500 italic">Eğer Senaryoları (What-If) Modülü buraya eklenecektir.</p>
-      </div>
+      <WhatIfModule />
     </div>
   );
 }
