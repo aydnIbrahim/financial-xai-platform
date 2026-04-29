@@ -2,40 +2,77 @@
 
 import { AuditLogsTable } from '@/features/audit/components/AuditLogsTable';
 import { useAuthStore } from '@/store/useAuthStore';
+import { AppShell } from '@/components/layout/AppShell';
+import { PageHeader } from '@/components/layout/PageHeader';
 import Link from 'next/link';
+import { ShieldOff, ArrowLeft } from 'lucide-react';
+import { Badge } from '@/components/ui/Badge';
 
 export default function AuditLogsPage() {
   const { user } = useAuthStore();
 
+  /* ── Unauthorised ── */
   if (!user || user.role === 'CUSTOMER') {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-gray-50">
-        <div className="bg-white p-8 rounded-xl shadow text-center max-w-md">
-          <h1 className="text-2xl font-bold text-red-600 mb-4">Yetkisiz Erişim</h1>
-          <p className="text-gray-600 mb-6">Bu sayfayı görüntüleme yetkiniz bulunmamaktadır.</p>
-          <Link href="/" className="px-6 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition">
+      <div
+        className="flex min-h-screen items-center justify-center p-8"
+        style={{ background: 'var(--background)' }}
+      >
+        <div className="card p-10 text-center max-w-md w-full animate-fade-in">
+          <div
+            className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5"
+            style={{ background: 'var(--danger-light)', color: 'var(--danger)' }}
+          >
+            <ShieldOff size={30} />
+          </div>
+          <h1 className="text-xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>
+            Yetkisiz Erişim
+          </h1>
+          <p className="text-sm mb-7" style={{ color: 'var(--text-secondary)' }}>
+            Bu sayfayı görüntülemek için Kredi Uzmanı veya Analist yetkisine sahip olmanız gerekmektedir.
+          </p>
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all"
+            style={{
+              background: 'linear-gradient(135deg, var(--primary), #818cf8)',
+              boxShadow: 'var(--shadow-primary)',
+            }}
+          >
+            <ArrowLeft size={15} />
             Ana Sayfaya Dön
           </Link>
         </div>
-      </main>
+      </div>
     );
   }
 
+  /* ── Authorised ── */
   return (
-    <main className="min-h-screen bg-gray-50 p-8 md:p-24">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-800">Denetim Kayıtları (Audit Logs)</h1>
-            <p className="text-gray-600 mt-2">Sistemde alınan tüm kararlar ve uzman müdahaleleri izlenebilmektedir.</p>
-          </div>
-          <Link href="/" className="px-6 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition font-medium">
-            Geri Dön
-          </Link>
-        </div>
-        
+    <AppShell>
+      <div className="animate-fade-in">
+        <PageHeader
+          title="Denetim Kayıtları"
+          description="Sistemde alınan tüm kararlar ve uzman müdahaleleri şeffaf biçimde izlenebilmektedir."
+          badge={<Badge variant="neutral">Audit Log</Badge>}
+          actions={
+            <Link
+              href="/"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium border transition-all duration-200"
+              style={{
+                borderColor: 'var(--border)',
+                color: 'var(--text-secondary)',
+                background: 'var(--surface)',
+              }}
+            >
+              <ArrowLeft size={14} />
+              Geri Dön
+            </Link>
+          }
+        />
+
         <AuditLogsTable />
       </div>
-    </main>
+    </AppShell>
   );
 }
