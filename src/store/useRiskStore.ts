@@ -76,15 +76,25 @@ export const useRiskStore = create<RiskStore>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const dataToPredict = customData || get().customerData;
-      const response = await fetch("https://unsent-spruce-washbowl.ngrok-free.dev/predict", {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
+      
+      const response = await fetch(`${baseUrl}/predict`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true" // ngrok için gerekli
+        },
         body: JSON.stringify(dataToPredict)
       });
-      if (!response.ok) throw new Error("API yanıt vermedi veya ngrok linki aktif değil.");
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`API Hatası (${response.status}): ${errorText || 'Beklenmedik bir hata oluştu.'}`);
+      }
+
       const data = await response.json();
       
-      // Sadece ana müşteri verisi için store'u güncelle (what-if simülasyonları için state'i kirletmemek adına)
+      // Sadece ana müşteri verisi için store'u güncelle
       if (!customData) {
         set({ result: data, loading: false });
       } else {
@@ -93,7 +103,9 @@ export const useRiskStore = create<RiskStore>((set, get) => ({
       
       return data;
     } catch (err: any) {
-      set({ error: err.message, loading: false });
+      const errorMessage = err.message || "API bağlantısı kurulamadı. Lütfen backend servisinin çalıştığından emin olun.";
+      set({ error: errorMessage, loading: false });
+      console.error("fetchPrediction Hatası:", err);
       throw err;
     }
   }
