@@ -115,7 +115,7 @@ function LoginPage() {
           {/* Mobile logo */}
           <div className="lg:hidden flex items-center gap-2 mb-8">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center"
-                 style={{ background: 'var(--primary)' }}>
+              style={{ background: 'var(--primary)' }}>
               <BrainCircuit size={16} className="text-white" />
             </div>
             <span className="font-bold text-lg" style={{ color: 'var(--text-primary)' }}>FinXAI</span>
@@ -126,7 +126,7 @@ function LoginPage() {
               Sisteme Giriş
             </h1>
             <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-              Demo için test etmek istediğiniz kullanıcı rolünü seçin
+              Lütfen giriş yapmak için bir rol seçin
             </p>
           </div>
 
@@ -160,10 +160,6 @@ function LoginPage() {
               </button>
             ))}
           </div>
-
-          <p className="mt-6 text-center text-xs text-[var(--text-muted)]">
-            Bu giriş sistemi demo amaçlıdır. Gerçek kimlik doğrulama içermez.
-          </p>
         </div>
       </div>
     </div>
@@ -179,9 +175,9 @@ export default function Home() {
   return (
     <AppShell>
       <div className="animate-fade-in">
-        {user.role === 'CUSTOMER'   && <CustomerDashboard />}
+        {user.role === 'CUSTOMER' && <CustomerDashboard />}
         {user.role === 'SPECIALIST' && <SpecialistDashboard />}
-        {user.role === 'ANALYST'    && <AnalystDashboard />}
+        {user.role === 'ANALYST' && <AnalystDashboard />}
       </div>
     </AppShell>
   );
