@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell,
   ScatterChart, Scatter, CartesianGrid, ZAxis,
@@ -10,7 +10,7 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { StatCard } from '@/components/ui/StatCard';
 import { DashboardSkeleton } from '@/components/ui/LoadingSkeleton';
 import { Badge } from '@/components/ui/Badge';
-import { BarChart2, Sigma, Cpu } from 'lucide-react';
+import { BarChart2, Sigma, Cpu, FlaskConical, RotateCcw } from 'lucide-react';
 
 import { useRiskStore } from '@/store/useRiskStore';
 
@@ -47,7 +47,14 @@ function ScatterTooltip({ active, payload }: { active?: boolean; payload?: Array
 }
 
 export function AnalystDashboard() {
-  const { result, loading, fetchPrediction } = useRiskStore();
+  const {
+    result,
+    loading,
+    fetchPrediction,
+    isScenarioActive,
+    scenarioResult,
+    clearScenario,
+  } = useRiskStore();
 
   useEffect(() => {
     if (!result && !loading) {
@@ -58,30 +65,89 @@ export function AnalystDashboard() {
   if (loading && !result) return <DashboardSkeleton />;
   if (!result) return null;
 
-  // Global etkiyi göstermek için mock impact
-  const shapFeatures = result.top_explanations.map(exp => ({
+  // Aktif sonuç: senaryo aktifse senaryo, değilse orijinal
+  const activeResult = isScenarioActive && scenarioResult ? scenarioResult : result;
+
+  // Global etkiyi göstermek için impact
+  const shapFeatures = activeResult.top_explanations.map(exp => ({
     name: exp.feature,
     value: exp.importance,
-    impact: result.prediction === 1 ? 'negative' : 'positive'
+    impact: activeResult.prediction === 1 ? 'negative' : 'positive'
   }));
 
   const negCount = shapFeatures.filter(f => f.impact === 'negative').length;
   const posCount = shapFeatures.length - negCount;
-  const baseValue = result.risk_probability;
+  const baseValue = activeResult.risk_probability;
 
   return (
     <div className="space-y-6">
+      {/* Scenario Active Global Banner */}
+      {isScenarioActive && (
+        <div
+          className="px-5 py-3.5 rounded-2xl flex items-center justify-between animate-fade-in"
+          style={{
+            background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(249, 115, 22, 0.06))',
+            border: '1px solid rgba(245, 158, 11, 0.25)',
+            boxShadow: '0 2px 12px rgba(245, 158, 11, 0.08)',
+          }}
+        >
+          <div className="flex items-center gap-3">
+            <div
+              className="w-9 h-9 rounded-xl flex items-center justify-center"
+              style={{ background: 'rgba(245, 158, 11, 0.15)', color: '#d97706' }}
+            >
+              <FlaskConical size={18} />
+            </div>
+            <div>
+              <p className="text-sm font-semibold" style={{ color: '#d97706' }}>
+                ⚗️ Senaryo Modu Aktif
+              </p>
+              <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                Analist paneli simüle edilmiş sonuçları yansıtmaktadır.
+                Orijinal olasılık: <strong>{result.risk_probability.toFixed(4)}</strong> → Senaryo: <strong>{activeResult.risk_probability.toFixed(4)}</strong>
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={clearScenario}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-200 hover:opacity-80"
+            style={{
+              background: 'rgba(245, 158, 11, 0.15)',
+              color: '#d97706',
+              border: '1px solid rgba(245, 158, 11, 0.3)',
+            }}
+          >
+            <RotateCcw size={13} />
+            Orijinale Dön
+          </button>
+        </div>
+      )}
+
       <PageHeader
         title="Analist Paneli"
         description="Modelin iç işleyişine dair detaylı XAI metrikleri ve global özellik önem dereceleri."
-        badge={<Badge variant="primary">SHAP + Dependence</Badge>}
+        badge={
+          <div className="flex items-center gap-2">
+            <Badge variant="primary">SHAP + Dependence</Badge>
+            {isScenarioActive && (
+              <span className="text-xs font-bold px-2.5 py-1 rounded-full"
+                    style={{ background: 'rgba(245, 158, 11, 0.12)', color: '#d97706' }}>
+                Senaryo
+              </span>
+            )}
+          </div>
+        }
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <StatCard
           label="Base Value (Olasılık)"
           value={baseValue.toFixed(4)}
-          description="Modelin güncel tahmin olasılığı"
+          description={
+            isScenarioActive
+              ? `Orijinal: ${result.risk_probability.toFixed(4)}`
+              : "Modelin güncel tahmin olasılığı"
+          }
           icon={<Sigma size={20} />}
           color="indigo"
         />
@@ -108,6 +174,12 @@ export function AnalystDashboard() {
         <div className="card p-6">
           <h3 className="text-sm font-semibold mb-0.5" style={{ color: 'var(--text-primary)' }}>
             Özellik Önem Dereceleri (API)
+            {isScenarioActive && (
+              <span className="ml-2 text-xs font-normal px-2 py-0.5 rounded-full"
+                    style={{ background: 'rgba(245, 158, 11, 0.12)', color: '#d97706' }}>
+                Senaryo Verisi
+              </span>
+            )}
           </h3>
           <p className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>SHAP — Ortalama Mutlak Değer</p>
           <div className="h-72 w-full">

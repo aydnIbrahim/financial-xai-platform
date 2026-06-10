@@ -1,22 +1,21 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { FeedbackWidget } from '@/features/feedback/components/FeedbackWidget';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { DashboardSkeleton } from '@/components/ui/LoadingSkeleton';
 import { CheckCircle, XCircle, AlertCircle, Info } from 'lucide-react';
 
-type DecisionData = {
-  decision: 'APPROVED' | 'REJECTED';
-  riskScore: number;
-  riskLabel: string;
-  message: string;
-};
-
 import { useRiskStore } from '@/store/useRiskStore';
 
 export function CustomerDashboard() {
-  const { result, loading, fetchPrediction } = useRiskStore();
+  const {
+    result,
+    loading,
+    fetchPrediction,
+    isScenarioActive,
+    scenarioResult,
+  } = useRiskStore();
 
   useEffect(() => {
     if (!result && !loading) {
@@ -27,8 +26,11 @@ export function CustomerDashboard() {
   if (loading && !result) return <DashboardSkeleton />;
   if (!result) return null;
 
-  const isApproved = result.prediction === 0;
-  const riskPct    = Math.round(result.risk_probability * 100);
+  // Aktif sonuç: senaryo aktifse senaryo, değilse orijinal
+  const activeResult = isScenarioActive && scenarioResult ? scenarioResult : result;
+
+  const isApproved = activeResult.prediction === 0;
+  const riskPct    = Math.round(activeResult.risk_probability * 100);
 
   const decisionCfg = isApproved
     ? {
@@ -50,7 +52,7 @@ export function CustomerDashboard() {
         barColor: '#ef4444',
       };
 
-  const topFactor = result.top_explanations[0]?.feature || 'çeşitli finansal faktörler';
+  const topFactor = activeResult.top_explanations[0]?.feature || 'çeşitli finansal faktörler';
   const explanationMessage = `Mevcut finansal verileriniz değerlendirilmiştir. Sistemimiz, özellikle "${topFactor}" değişkenini dikkate alarak başvurunuzun ${isApproved ? 'düşük riskli' : 'yüksek riskli'} olduğuna karar vermiştir.`;
 
   return (
@@ -75,7 +77,7 @@ export function CustomerDashboard() {
             </div>
           </div>
           <span className={`text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wide ${decisionCfg.badgeBg}`}>
-            {result.risk_label}
+            {activeResult.risk_label}
           </span>
         </div>
 

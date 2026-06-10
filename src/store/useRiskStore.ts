@@ -58,15 +58,28 @@ export type PredictionResult = {
 };
 
 type RiskStore = {
+  // --- Original prediction state ---
   customerData: CustomerData;
   setCustomerData: (data: Partial<CustomerData>) => void;
   result: PredictionResult | null;
   loading: boolean;
   error: string | null;
   fetchPrediction: (customData?: CustomerData) => Promise<PredictionResult>;
+
+  // --- Scenario (What-If) state ---
+  scenarioResult: PredictionResult | null;
+  scenarioData: CustomerData | null;
+  isScenarioActive: boolean;
+  applyScenario: (data: CustomerData, result: PredictionResult) => void;
+  clearScenario: () => void;
+
+  // --- Computed-like getter ---
+  /** Returns scenarioResult when scenario is active, otherwise the original result */
+  getActiveResult: () => PredictionResult | null;
 };
 
 export const useRiskStore = create<RiskStore>((set, get) => ({
+  // --- Original prediction state ---
   customerData: defaultCustomerData,
   setCustomerData: (data) => set((state) => ({ customerData: { ...state.customerData, ...data } })),
   result: null,
@@ -108,5 +121,30 @@ export const useRiskStore = create<RiskStore>((set, get) => ({
       console.error("fetchPrediction Hatası:", err);
       throw err;
     }
-  }
+  },
+
+  // --- Scenario (What-If) state ---
+  scenarioResult: null,
+  scenarioData: null,
+  isScenarioActive: false,
+
+  applyScenario: (data, result) => set({
+    scenarioData: data,
+    scenarioResult: result,
+    isScenarioActive: true,
+  }),
+
+  clearScenario: () => set({
+    scenarioData: null,
+    scenarioResult: null,
+    isScenarioActive: false,
+  }),
+
+  // --- Computed-like getter ---
+  getActiveResult: () => {
+    const state = get();
+    return state.isScenarioActive && state.scenarioResult
+      ? state.scenarioResult
+      : state.result;
+  },
 }));
