@@ -68,11 +68,11 @@ export function AnalystDashboard() {
   // Aktif sonuç: senaryo aktifse senaryo, değilse orijinal
   const activeResult = isScenarioActive && scenarioResult ? scenarioResult : result;
 
-  // Global etkiyi göstermek için impact
+  // Per-feature SHAP yönüne göre impact
   const shapFeatures = activeResult.top_explanations.map(exp => ({
     name: exp.feature,
     value: exp.importance,
-    impact: activeResult.prediction === 1 ? 'negative' : 'positive'
+    impact: (exp.shap_value ?? 0) >= 0 ? 'negative' : 'positive' // pozitif SHAP = risk artırıcı = negative impact
   }));
 
   const negCount = shapFeatures.filter(f => f.impact === 'negative').length;
