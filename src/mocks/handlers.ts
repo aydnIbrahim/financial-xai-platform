@@ -25,7 +25,6 @@ export const handlers = [
     });
   }),
 
-  // LIME Değerleri API (Uzman için)
   http.get('/api/explanations/lime', () => {
     return HttpResponse.json({
       localExplanations: [
@@ -39,7 +38,7 @@ export const handlers = [
   // What-If Senaryo API
   http.post('/api/simulate', async ({ request }) => {
     const data = await request.json() as any;
-    
+
     // Basit bir mock mantığı: Gelir artarsa risk düşer.
     let newScore = 78;
     if (data.income > 20000) {
@@ -50,8 +49,8 @@ export const handlers = [
       decision: newScore > 60 ? 'REJECTED' : 'APPROVED',
       riskScore: newScore,
       riskLabel: newScore > 60 ? 'Yüksek Risk' : 'Düşük Risk',
-      message: newScore > 60 
-        ? 'Risk hala yüksek, kredi onaylanmadı.' 
+      message: newScore > 60
+        ? 'Risk hala yüksek, kredi onaylanmadı.'
         : 'Gelir artışı ile risk düştü, kredi onaylanabilir.',
     });
   }),

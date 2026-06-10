@@ -7,13 +7,13 @@
 
 Proje, farklı kullanıcı rollerinin ihtiyaçlarına uygun olarak tasarlanmış arayüzler sunar:
 - **Müşteri (Son Kullanıcı):** Kredi başvurularının sonuçlarını ve AI tarafından üretilen anlaşılır açıklamaları görüntüler.
-- **Kredi Uzmanı (Operasyon):** LIME (Local Interpretable Model-Agnostic Explanations) açıklamalarını, risk analizlerini ve What-If (Durum) senaryo simülasyonlarını yönetir.
+- **Kredi Uzmanı (Operasyon):** SHAP açıklamalarını, risk analizlerini ve What-If (Durum) senaryo simülasyonlarını yönetir.
 - **Veri Bilimcisi (Analist):** Global SHAP (SHapley Additive exPlanations) değerleri, dependence plot ve detaylı model performans metriklerini inceler.
 
 ## Temel Özellikler
 - **Rol Tabanlı Erişim ve Paneller:** Müşteri, Uzman ve Analist için özelleştirilmiş, amaca yönelik arayüzler (Dashboards).
 - **Açıklanabilir Yapay Zeka (XAI) Entegrasyonları:**
-  - LIME ve SHAP grafikleri ile yerel (local) ve genel (global) model açıklamaları.
+  - SHAP grafikleri ile yerel (local) ve genel (global) model açıklamaları.
   - Makine öğrenmesi kararlarının insan diline yakınlaştırılması.
 - **What-If Senaryo Simülasyonu:** Veriler üzerinde değişiklik yapılarak modelin kararlarının nasıl değişeceğini anında görebilme.
 - **Tam Denetlenebilir Audit Log:** Sistemde yapılan her işlemin ve alınan her kararın güvenli bir şekilde kaydedilmesi ve raporlanabilmesi.
@@ -32,7 +32,7 @@ Proje, farklı kullanıcı rollerinin ihtiyaçlarına uygun olarak tasarlanmış
 ### 3. Kredi Uzmanı Paneli (Specialist Dashboard & What-If Senaryosu)
 ![Kredi Uzmanı Paneli](./docs/images/specialist_dashboard_placeholder.png)
 
-### 4. Veri Bilimcisi Paneli (Analyst Dashboard & SHAP/LIME Metrikleri)
+### 4. Veri Bilimcisi Paneli (Analyst Dashboard & SHAP Metrikleri)
 ![Veri Bilimcisi Paneli](./docs/images/analyst_dashboard_placeholder.png)
 
 ---
@@ -115,7 +115,7 @@ npm run start
 ---
 
 ## Akademik Kapsam ve İnsan-Makine Takımlaşması (Human-AI Teaming)
-Bu proje, XAI (Açıklanabilir Yapay Zeka) yöntemlerinin (özellikle LIME ve SHAP) gerçek dünya problemlerinde, bilhassa finansal kredi risk değerlendirmesinde nasıl kullanılabileceğini ortaya koyar.
+Bu proje, XAI (Açıklanabilir Yapay Zeka) yöntemlerinin (özellikle SHAP) gerçek dünya problemlerinde, bilhassa finansal kredi risk değerlendirmesinde nasıl kullanılabileceğini ortaya koyar.
 Makine öğrenmesi algoritmalarının "kara kutu" (black-box) yapısını ortadan kaldırarak;
 1. **Adalet (Fairness):** Veri bilimciler için bias (yanlılık) takibini kolaylaştırır.
 2. **Hesap Verilebilirlik (Accountability):** Audit loglar ve kararların gerekçelendirilmesi ile yasal standartlara zemin hazırlar.

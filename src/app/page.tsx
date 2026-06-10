@@ -24,7 +24,7 @@ const ROLES = [
     id: 'SPECIALIST' as const,
     label: 'Kredi Uzmanı',
     sublabel: 'Operasyon',
-    description: 'LIME açıklamaları, risk analizi ve senaryo simülasyonlarını yönetin.',
+    description: 'SHAP açıklamaları, risk analizi ve senaryo simülasyonlarını yönetin.',
     icon: <TrendingUp size={22} />,
     gradient: 'from-indigo-500 to-violet-500',
     bg: 'hover:bg-indigo-50 border-indigo-100 hover:border-indigo-300',
@@ -91,7 +91,7 @@ function LoginPage() {
 
           {/* Feature pills */}
           <div className="mt-8 flex flex-col gap-2">
-            {['LIME & SHAP Açıklamaları', 'What-If Senaryo Simülasyonu', 'Tam Denetlenebilir Audit Log'].map((f) => (
+            {['SHAP Açıklamaları', 'What-If Senaryo Simülasyonu', 'Tam Denetlenebilir Audit Log'].map((f) => (
               <div key={f} className="flex items-center gap-2 text-slate-300 text-sm">
                 <span className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--primary)' }} />
                 {f}

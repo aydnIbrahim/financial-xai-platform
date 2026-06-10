@@ -35,11 +35,11 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Array<
 }
 
 function RiskGauge({ score }: { score: number }) {
-  const r       = 52;
-  const circ    = 2 * Math.PI * r;
-  const pct     = score / 100;
+  const r = 52;
+  const circ = 2 * Math.PI * r;
+  const pct = score / 100;
   const dashOff = circ * (1 - pct * 0.75);
-  const color   = score >= 70 ? '#ef4444' : score >= 40 ? '#f59e0b' : '#10b981';
+  const color = score >= 70 ? '#ef4444' : score >= 40 ? '#f59e0b' : '#10b981';
 
   return (
     <div className="flex flex-col items-center">
@@ -60,9 +60,9 @@ function RiskGauge({ score }: { score: number }) {
           style={{ transition: 'stroke-dashoffset 0.8s ease' }}
         />
         <text x="70" y="82" textAnchor="middle" fontSize="22" fontWeight="700"
-              fill="var(--text-primary)" fontFamily="inherit">{score}</text>
+          fill="var(--text-primary)" fontFamily="inherit">{score}</text>
         <text x="70" y="96" textAnchor="middle" fontSize="9" fill="var(--text-muted)"
-              fontFamily="inherit" fontWeight="600" letterSpacing="0.05em">RİSK SKORU</text>
+          fontFamily="inherit" fontWeight="600" letterSpacing="0.05em">RİSK SKORU</text>
       </svg>
     </div>
   );
@@ -84,7 +84,7 @@ export function SpecialistDashboard() {
   const isApproved = result.prediction === 0; // 0: Risksiz (Onaylandı), 1: Riskli (Reddedildi)
   const riskScore = Math.round(result.risk_probability * 100);
 
-  // API'den gelen önem derecelerini LIME formatına dönüştür
+  // API'den gelen önem derecelerini SHAP formatına dönüştür
   const chartData = result.top_explanations.map(exp => ({
     feature: exp.feature,
     contribution: exp.importance // Eğer API hep pozitif dönüyorsa hepsi aynı yönde çizer, risk yönüne göre renklendirilebilir ama şimdilik doğrudan kullanıyoruz.
