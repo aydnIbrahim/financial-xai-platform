@@ -112,6 +112,7 @@ export function SpecialistDashboard() {
           feature,
           contribution: origExp?.importance ?? 0,
           scenarioContribution: scenExp?.importance ?? 0,
+          shapDirection: scenExp?.shap_value ?? 0, // Yönlü SHAP (renklendirme için)
         };
       }).sort((a, b) => b.scenarioContribution - a.scenarioContribution);
     }
@@ -121,6 +122,7 @@ export function SpecialistDashboard() {
       feature: exp.feature,
       contribution: exp.importance,
       scenarioContribution: undefined as number | undefined,
+      shapDirection: exp.shap_value ?? 0, // Yönlü SHAP (renklendirme için)
     }));
   })();
 
@@ -277,7 +279,7 @@ export function SpecialistDashboard() {
                     <Bar dataKey="scenarioContribution" name="Senaryo" radius={[0, 6, 6, 0]} maxBarSize={14}>
                       {chartData.map((entry, i) => (
                         <Cell key={i} fill={
-                          (entry.scenarioContribution ?? 0) > (entry.contribution ?? 0)
+                          entry.shapDirection >= 0
                             ? '#ef4444'
                             : '#10b981'
                         } />
@@ -287,7 +289,7 @@ export function SpecialistDashboard() {
                 ) : (
                   <Bar dataKey="contribution" radius={[0, 6, 6, 0]} maxBarSize={18}>
                     {chartData.map((entry, i) => (
-                      <Cell key={i} fill={entry.contribution > 0 ? '#ef4444' : '#10b981'} />
+                      <Cell key={i} fill={entry.shapDirection >= 0 ? '#ef4444' : '#10b981'} />
                     ))}
                   </Bar>
                 )}
@@ -301,19 +303,19 @@ export function SpecialistDashboard() {
                   <span className="w-2.5 h-2.5 rounded-sm inline-block" style={{ background: '#94a3b8', opacity: 0.5 }} /> Orijinal Etki
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-sm inline-block" style={{ background: '#ef4444' }} /> Artan Etki (Senaryo)
+                  <span className="w-2.5 h-2.5 rounded-sm inline-block" style={{ background: '#ef4444' }} /> Risk Artırıcı (Senaryo SHAP)
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-sm inline-block" style={{ background: '#10b981' }} /> Azalan Etki (Senaryo)
+                  <span className="w-2.5 h-2.5 rounded-sm inline-block" style={{ background: '#10b981' }} /> Risk Azaltıcı (Senaryo SHAP)
                 </div>
               </>
             ) : (
               <>
                 <div className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-sm inline-block" style={{ background: '#ef4444' }} /> Etki Derecesi (Pozitif)
+                  <span className="w-2.5 h-2.5 rounded-sm inline-block" style={{ background: '#ef4444' }} /> Risk Artırıcı (SHAP +)
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-sm inline-block" style={{ background: '#10b981' }} /> Etki Derecesi (Negatif)
+                  <span className="w-2.5 h-2.5 rounded-sm inline-block" style={{ background: '#10b981' }} /> Risk Azaltıcı (SHAP −)
                 </div>
               </>
             )}

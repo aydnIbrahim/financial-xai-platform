@@ -54,6 +54,7 @@ export type PredictionResult = {
     feature: string;
     value: number;
     importance: number;
+    shap_value?: number; // Yönlü SHAP: pozitif → risk artırır, negatif → risk azaltır
   }>;
 };
 
